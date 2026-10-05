@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="vi">
+<head><meta charset="utf-8"><title>Thêm sách</title></head>
+<body>
+  <main>
+    <h1>Thêm sách mới</h1>
+    {{#if error}}<p style="color:red">{{error}}</p>{{/if}}
+    <form method="post" action="/books">
+      <label>Mã sản phẩm (bắt đầu bằng {{mssv}}: 3 số cuối)<br><input name="productCode" required value="{{oldData.productCode}}"></label><br>
+      <label>Tên sách<br><input name="title" required value="{{oldData.title}}"></label><br>
+      <label>Tác giả<br><input name="author" required value="{{oldData.author}}"></label><br>
+      <label>Giá trước thuế<br><input name="priceBeforeTax" type="number" min="0" step="0.01" required value="{{oldData.priceBeforeTax}}"></label><br><br>
+      <button type="submit">Lưu sách</button>
+    </form>
+    <p><a href="/books">Quay lại danh sách</a></p>
+  </main>
+  <footer>Họ tên: {{fullName}} | MSSV: {{mssv}} | Lớp: {{className}} | VAT áp dụng: {{vatRate}}%</footer>
+</body>
+</html>
