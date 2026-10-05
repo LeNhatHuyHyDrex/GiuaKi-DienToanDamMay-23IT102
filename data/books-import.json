@@ -1,0 +1,26 @@
+[
+  {
+    "productCode": "102001",
+    "title": "Lap trinh Node.js",
+    "author": "Le Nhat Huy",
+    "priceBeforeTax": 100000,
+    "vatRate": 7,
+    "priceAfterTax": 107000
+  },
+  {
+    "productCode": "102002",
+    "title": "Co so du lieu MongoDB",
+    "author": "Le Nhat Huy",
+    "priceBeforeTax": 150000,
+    "vatRate": 7,
+    "priceAfterTax": 160500
+  },
+  {
+    "productCode": "102003",
+    "title": "Dien toan dam may",
+    "author": "Le Nhat Huy",
+    "priceBeforeTax": 200000,
+    "vatRate": 7,
+    "priceAfterTax": 214000
+  }
+]
