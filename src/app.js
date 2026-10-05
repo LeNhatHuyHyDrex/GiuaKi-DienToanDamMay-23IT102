@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const path = require('path');
 const express = require('express');
 const { engine } = require('express-handlebars');
 const configureSession = require('./config/session');
@@ -13,7 +14,7 @@ const app = express();
 app.set('trust proxy', 1);
 app.engine('hbs', engine({ extname: '.hbs' }));
 app.set('view engine', 'hbs');
-app.set('views', './src/views');
+app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 configureSession(app);
