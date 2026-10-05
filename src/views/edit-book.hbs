@@ -83,9 +83,9 @@
 
     /* Form Container */
     .container {
-      max-width: 600px;
+      max-width: 660px;
       width: 100%;
-      margin: 2.5rem auto;
+      margin: 2.25rem auto;
       padding: 0 1.25rem;
       flex: 1;
     }
@@ -99,7 +99,7 @@
     }
 
     .form-header {
-      margin-bottom: 1.75rem;
+      margin-bottom: 1.5rem;
       padding-bottom: 1.25rem;
       border-bottom: 1px solid var(--slate-100);
     }
@@ -127,19 +127,77 @@
       display: flex;
       align-items: center;
       gap: 0.6rem;
+      font-weight: 500;
+    }
+
+    /* Exam Personalization Rule Banner */
+    .rule-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+      border: 1.5px solid #86efac;
+      border-radius: 14px;
+      padding: 1.1rem 1.25rem;
+      margin-bottom: 1.65rem;
+      display: flex;
+      gap: 0.85rem;
+      align-items: flex-start;
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.08);
+    }
+    .rule-box-icon {
+      color: #059669;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .rule-title {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #065f46;
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.01em;
+    }
+    .rule-desc {
+      font-size: 0.84rem;
+      color: #047857;
+      line-height: 1.55;
+    }
+    .rule-desc strong {
+      color: #064e3b;
     }
 
     /* Form Fields */
     .form-group {
       margin-bottom: 1.35rem;
     }
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.45rem;
+    }
     label {
-      display: block;
       font-size: 0.88rem;
       font-weight: 700;
       color: var(--slate-700);
-      margin-bottom: 0.45rem;
     }
+    .status-pill {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.15rem 0.55rem;
+      border-radius: 9999px;
+      display: none;
+    }
+    .pill-valid {
+      display: inline-block;
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+    }
+    .pill-invalid {
+      display: inline-block;
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+    }
+
     input {
       width: 100%;
       padding: 0.75rem 1rem;
@@ -160,6 +218,11 @@
       font-family: 'JetBrains Mono', monospace;
       font-weight: 600;
       letter-spacing: 0.05em;
+    }
+    .input-hint {
+      font-size: 0.78rem;
+      color: var(--slate-500);
+      margin-top: 0.35rem;
     }
 
     /* Dynamic VAT Calculation Card */
@@ -251,7 +314,7 @@
       margin-top: auto;
     }
     .footer-inner {
-      max-width: 600px;
+      max-width: 660px;
       margin: 0 auto;
       text-align: center;
       font-size: 0.88rem;
@@ -288,7 +351,7 @@
     <div class="form-card">
       <div class="form-header">
         <h1 class="form-title">Cập Nhật Thông Tin Sách</h1>
-        <p class="form-desc">Chỉnh sửa thông tin chi tiết của cuốn sách.</p>
+        <p class="form-desc">Chỉnh sửa thông tin và lưu trực tiếp qua tài khoản Ghi xuống MongoDB Atlas.</p>
       </div>
 
       {{#if error}}
@@ -298,10 +361,29 @@
         </div>
       {{/if}}
 
+      <!-- Exam Personalization Rule Banner -->
+      <div class="rule-box">
+        <div class="rule-box-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        </div>
+        <div>
+          <div class="rule-title">Thuật toán cá nhân hóa (Theo đề bài kiểm tra):</div>
+          <div class="rule-desc">
+            • <strong>Bộ lọc mã sản phẩm</strong>: Bắt buộc có tiền tố là 3 số cuối MSSV (<strong>102</strong>), nếu sai hệ thống sẽ <strong>từ chối xử lý</strong>.<br>
+            • <strong>Thuế suất VAT</strong>: Tính động theo công thức: <strong>VAT = (Chữ số cuối MSSV + 5)%</strong> = (2 + 5)% = <strong>{{vatRate}}%</strong>.<br>
+            • <strong>Giá sau thuế</strong>: Hệ thống tự động tính giá sau thuế trước khi lưu xuống đám mây MongoDB Atlas.
+          </div>
+        </div>
+      </div>
+
       <form method="post" action="/books/edit/{{book._id}}" id="editBookForm">
         <div class="form-group">
-          <label for="productCode">Mã sản phẩm *</label>
-          <input id="productCode" name="productCode" class="code-input" placeholder="Ví dụ: 102001" required value="{{oldData.productCode}}">
+          <div class="label-row">
+            <label for="productCode">Mã sản phẩm *</label>
+            <span id="prefixStatus" class="status-pill"></span>
+          </div>
+          <input id="productCode" name="productCode" class="code-input" placeholder="Ví dụ: 102001, 102ABC" required value="{{oldData.productCode}}">
+          <div class="input-hint">Tiền tố bắt buộc: <strong>102</strong> (3 số cuối MSSV {{mssv}}).</div>
         </div>
 
         <div class="form-group">
@@ -323,18 +405,18 @@
         <div class="calc-card">
           <div class="calc-header">
             <span>Bảng tính thuế tự động</span>
-            <span>Mức VAT: {{vatRate}}%</span>
+            <span>VAT: ({{mssv}} đuôi 2 + 5)% = {{vatRate}}%</span>
           </div>
           <div class="calc-row">
-            <span style="color: var(--slate-600);">Giá gốc:</span>
+            <span style="color: var(--slate-600);">Giá gốc (Trước thuế):</span>
             <span id="calcBase" style="font-weight: 600;">0 ₫</span>
           </div>
           <div class="calc-row">
-            <span style="color: var(--slate-600);">Thuế VAT ({{vatRate}}%):</span>
-            <span id="calcVat" style="font-weight: 600; color: #6366f1;">0 ₫</span>
+            <span style="color: var(--slate-600);">Thuế VAT động ({{vatRate}}%):</span>
+            <span id="calcVat" style="font-weight: 600; color: #6366f1;">+0 ₫</span>
           </div>
           <div class="calc-row final">
-            <span>Giá sau thuế (Tự động tính):</span>
+            <span>Giá sau thuế (Lưu xuống MongoDB Cloud):</span>
             <span id="calcTotal">0 ₫</span>
           </div>
         </div>
@@ -359,6 +441,30 @@
 
   <script>
     const vatRate = Number('{{vatRate}}') || 7;
+    const prefix = '102';
+
+    // Live Product Code prefix check
+    const codeInput = document.getElementById('productCode');
+    const prefixStatus = document.getElementById('prefixStatus');
+
+    function checkPrefix() {
+      const val = codeInput.value.trim();
+      if (!val) {
+        prefixStatus.style.display = 'none';
+        return;
+      }
+      if (val.startsWith(prefix)) {
+        prefixStatus.textContent = '✓ Tiền tố 102 hợp lệ';
+        prefixStatus.className = 'status-pill pill-valid';
+      } else {
+        prefixStatus.textContent = '✕ Tiền tố phải là 102 (Hệ thống sẽ từ chối)';
+        prefixStatus.className = 'status-pill pill-invalid';
+      }
+    }
+    codeInput.addEventListener('input', checkPrefix);
+    checkPrefix();
+
+    // Live VAT Calculation
     const priceInput = document.getElementById('priceBeforeTax');
     const calcBase = document.getElementById('calcBase');
     const calcVat = document.getElementById('calcVat');

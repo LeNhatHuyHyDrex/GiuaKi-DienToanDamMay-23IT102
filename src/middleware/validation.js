@@ -6,9 +6,9 @@ function validateBook(req, res, next) {
   const isEdit = !!req.params.id;
   const viewName = isEdit ? 'edit-book' : 'add-book';
 
-  if (!productCode || !productCode.startsWith(prefix)) {
+  if (!productCode || !productCode.trim().startsWith(prefix)) {
     return res.status(400).render(viewName, {
-      error: `Mã sản phẩm bắt buộc phải bắt đầu bằng ${prefix} (3 số cuối MSSV).`,
+      error: `Hệ thống từ chối xử lý: Mã sản phẩm bắt buộc phải có tiền tố là 3 số cuối MSSV (${prefix}).`,
       book: isEdit ? { _id: req.params.id, ...req.body } : undefined,
       oldData: req.body,
       ...pageInfo(),
