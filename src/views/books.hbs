@@ -1,18 +1,119 @@
 <!doctype html>
 <html lang="vi">
-<head><meta charset="utf-8"><title>Quản lý sách</title></head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hệ Thống Quản Lý Sách - Cloud Computing</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #16a34a;
+      --success-bg: #dcfce7;
+      --danger: #dc2626;
+      --danger-bg: #fee2e2;
+      --badge-bg: #eff6ff;
+      --badge-text: #1d4ed8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: var(--bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+    .header-bar { background: #1e293b; color: #fff; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .header-title { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.025em; }
+    .header-badges { display: flex; gap: 0.5rem; }
+    .badge { font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 9999px; font-weight: 600; background: rgba(255,255,255,0.15); color: #fff; }
+    .container { max-width: 1000px; width: 100%; margin: 2rem auto; padding: 0 1rem; flex: 1; }
+    .card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.05); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--primary); color: #fff; text-decoration: none; padding: 0.55rem 1.1rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: background 0.15s ease; border: none; cursor: pointer; }
+    .btn:hover { background: var(--primary-hover); }
+    .alert { padding: 0.85rem 1.25rem; border-radius: 8px; margin-bottom: 1.25rem; font-size: 0.95rem; }
+    .alert-success { background: var(--success-bg); color: #15803d; border: 1px solid #bbf7d0; }
+    .alert-error { background: var(--danger-bg); color: var(--danger); border: 1px solid #fecaca; }
+    .session-info { font-size: 0.85rem; color: var(--text-muted); background: #f1f5f9; padding: 0.5rem 0.75rem; border-radius: 6px; display: inline-block; margin-bottom: 1rem; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th { background: #f8fafc; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.75rem 1rem; border-bottom: 2px solid var(--border); }
+    td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f8fafc; }
+    .code-tag { font-family: monospace; background: var(--badge-bg); color: var(--badge-text); padding: 0.2rem 0.45rem; border-radius: 4px; font-weight: 600; font-size: 0.88rem; }
+    .price { font-weight: 600; color: #047857; }
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
+    footer { background: #0f172a; color: #cbd5e1; text-align: center; padding: 1.25rem 1rem; font-size: 0.9rem; margin-top: auto; border-top: 1px solid #334155; }
+    footer strong { color: #f8fafc; }
+  </style>
+</head>
 <body>
-  <main>
-    <h1>Quản lý sách</h1>
-    <a href="/books/add">+ Thêm sách</a>
-    {{#if error}}<p style="color:red">{{error}}</p>{{/if}}
-    {{#if books.length}}
-    <table border="1" cellpadding="8">
-      <thead><tr><th>Mã sản phẩm</th><th>Tên sách</th><th>Tác giả</th><th>Giá trước thuế</th><th>VAT</th><th>Giá sau thuế</th></tr></thead>
-      <tbody>{{#each books}}<tr><td>{{productCode}}</td><td>{{title}}</td><td>{{author}}</td><td>{{priceBeforeTax}}</td><td>{{vatRate}}%</td><td>{{priceAfterTax}}</td></tr>{{/each}}</tbody>
-    </table>
-    {{else}}<p>Chưa có sách nào.</p>{{/if}}
+  <header class="header-bar">
+    <div class="header-title">Hệ Thống Quản Lý Sách (Cloud Computing)</div>
+    <div class="header-badges">
+      <span class="badge">DB_{{mssv}}</span>
+      <span class="badge">VAT: {{vatRate}}%</span>
+    </div>
+  </header>
+
+  <main class="container">
+    {{#if flashMessage}}
+      <div class="alert alert-success">{{flashMessage}}</div>
+    {{/if}}
+
+    {{#if error}}
+      <div class="alert alert-error">{{error}}</div>
+    {{/if}}
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h2 style="font-size: 1.4rem;">Danh Sách Sách Trên Đám Mây</h2>
+          <div class="session-info">
+            Cloud Stateless Session: Phiên kết nối MongoDB Atlas | Lượt truy cập phiên: <strong>{{sessionViews}}</strong>
+          </div>
+        </div>
+        <a href="/books/add" class="btn">+ Thêm Sách Mới</a>
+      </div>
+
+      {{#if books.length}}
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Mã sản phẩm</th>
+              <th>Tên sách</th>
+              <th>Tác giả</th>
+              <th>Giá gốc</th>
+              <th>Thuế VAT</th>
+              <th>Giá sau thuế</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each books}}
+            <tr>
+              <td><span class="code-tag">{{productCode}}</span></td>
+              <td style="font-weight: 600;">{{title}}</td>
+              <td style="color: var(--text-muted);">{{author}}</td>
+              <td>{{priceBeforeTax}} đ</td>
+              <td><span style="color: #6366f1; font-weight: 600;">{{vatRate}}%</span></td>
+              <td><span class="price">{{priceAfterTax}} đ</span></td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+      {{else}}
+      <div class="empty-state">
+        <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">Chưa có cuốn sách nào trong cơ sở dữ liệu.</p>
+        <p style="font-size: 0.88rem;">Nhấn nút "Thêm Sách Mới" ở trên để thêm sản phẩm đầu tiên.</p>
+      </div>
+      {{/if}}
+    </div>
   </main>
-  <footer>Họ tên: {{fullName}} | MSSV: {{mssv}} | Lớp: {{className}} | VAT áp dụng: {{vatRate}}%</footer>
+
+  <footer>
+    Họ tên: <strong>{{fullName}}</strong> | MSSV: <strong>{{mssv}}</strong> | Lớp: <strong>{{className}}</strong> | Mức VAT áp dụng: <strong>{{vatRate}}%</strong>
+  </footer>
 </body>
 </html>
