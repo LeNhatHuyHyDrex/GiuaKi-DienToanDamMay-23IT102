@@ -60,4 +60,60 @@ async function createBook(req, res) {
   }
 }
 
-module.exports = { listBooks, showAddBook, createBook };
+async function showEditBook(req, res) {
+  try {
+    const book = await ReadBook.findById(req.params.id).lean();
+    if (!book) {
+      return res.redirect('/books');
+    }
+    res.render('edit-book', {
+      book,
+      oldData: book,
+      ...pageInfo(),
+    });
+  } catch (error) {
+    console.error('Lỗi xem chi tiết sách:', error);
+    res.redirect('/books');
+  }
+}
+
+async function updateBook(req, res) {
+  try {
+    await WriteBook.findByIdAndUpdate(req.params.id, req.bookData);
+    if (req.session) {
+      req.session.lastAction = `Đã cập nhật thành công sách: "${req.bookData.title}" (Mã SP: ${req.bookData.productCode})`;
+    }
+    res.redirect('/books');
+  } catch (error) {
+    console.error('Lỗi cập nhật sách:', error);
+    const duplicate = error.code === 11000;
+    res.status(400).render('edit-book', {
+      error: duplicate ? 'Mã sản phẩm đã bị trùng với sách khác.' : 'Không thể cập nhật thông tin sách.',
+      book: { _id: req.params.id, ...req.body },
+      oldData: req.body,
+      ...pageInfo(),
+    });
+  }
+}
+
+async function deleteBook(req, res) {
+  try {
+    const deleted = await WriteBook.findByIdAndDelete(req.params.id);
+    if (req.session && deleted) {
+      req.session.lastAction = `Đã xóa thành công sách: "${deleted.title}" (Mã SP: ${deleted.productCode})`;
+    }
+    res.redirect('/books');
+  } catch (error) {
+    console.error('Lỗi xóa sách:', error);
+    res.redirect('/books');
+  }
+}
+
+module.exports = {
+  listBooks,
+  showAddBook,
+  createBook,
+  showEditBook,
+  updateBook,
+  deleteBook,
+};
