@@ -8,16 +8,33 @@ async function listBooks(req, res) {
       req.session.lastAction = null;
       req.session.views = (req.session.views || 0) + 1;
     }
-    const books = await ReadBook.find().sort({ createdAt: -1 }).lean();
+    const rawBooks = await ReadBook.find().sort({ createdAt: -1 }).lean();
+    const books = rawBooks.map((b) => ({
+      ...b,
+      formattedPriceBefore: Number(b.priceBeforeTax || 0).toLocaleString('vi-VN') + ' ₫',
+      formattedPriceAfter: Number(b.priceAfterTax || 0).toLocaleString('vi-VN') + ' ₫',
+    }));
+    const totalInventoryValue = rawBooks
+      .reduce((sum, b) => sum + (Number(b.priceAfterTax) || 0), 0)
+      .toLocaleString('vi-VN') + ' ₫';
+
     res.render('books', {
       books,
+      totalBooks: rawBooks.length,
+      totalInventoryValue,
       flashMessage,
       sessionViews: req.session ? req.session.views : 1,
       ...pageInfo(),
     });
   } catch (error) {
     console.error('Lỗi tải danh sách sách:', error);
-    res.status(500).render('books', { books: [], error: 'Không thể tải danh sách sách từ Cloud MongoDB.', ...pageInfo() });
+    res.status(500).render('books', {
+      books: [],
+      totalBooks: 0,
+      totalInventoryValue: '0 ₫',
+      error: 'Không thể tải danh sách sách từ Cloud MongoDB.',
+      ...pageInfo(),
+    });
   }
 }
 

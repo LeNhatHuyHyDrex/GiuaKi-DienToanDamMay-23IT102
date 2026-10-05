@@ -3,88 +3,557 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hệ Thống Quản Lý Sách - Cloud Computing</title>
+  <title>CloudBooks - Quản Lý Sách Điện Toán Đám Mây</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
-      --success: #16a34a;
-      --success-bg: #dcfce7;
-      --danger: #dc2626;
-      --danger-bg: #fee2e2;
-      --badge-bg: #eff6ff;
-      --badge-text: #1d4ed8;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #eef2ff;
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --emerald: #059669;
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-400: #94a3b8;
+      --slate-500: #64748b;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1e293b;
+      --slate-900: #0f172a;
+      --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
+      --card-shadow-hover: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-    body { background-color: var(--bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
-    .header-bar { background: #1e293b; color: #fff; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .header-title { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.025em; }
-    .header-badges { display: flex; gap: 0.5rem; }
-    .badge { font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 9999px; font-weight: 600; background: rgba(255,255,255,0.15); color: #fff; }
-    .container { max-width: 1000px; width: 100%; margin: 2rem auto; padding: 0 1rem; flex: 1; }
-    .card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.05); padding: 1.5rem; margin-bottom: 1.5rem; }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
-    .btn { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--primary); color: #fff; text-decoration: none; padding: 0.55rem 1.1rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: background 0.15s ease; border: none; cursor: pointer; }
-    .btn:hover { background: var(--primary-hover); }
-    .alert { padding: 0.85rem 1.25rem; border-radius: 8px; margin-bottom: 1.25rem; font-size: 0.95rem; }
-    .alert-success { background: var(--success-bg); color: #15803d; border: 1px solid #bbf7d0; }
-    .alert-error { background: var(--danger-bg); color: var(--danger); border: 1px solid #fecaca; }
-    .session-info { font-size: 0.85rem; color: var(--text-muted); background: #f1f5f9; padding: 0.5rem 0.75rem; border-radius: 6px; display: inline-block; margin-bottom: 1rem; }
-    table { width: 100%; border-collapse: collapse; text-align: left; }
-    th { background: #f8fafc; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.75rem 1rem; border-bottom: 2px solid var(--border); }
-    td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: #f8fafc; }
-    .code-tag { font-family: monospace; background: var(--badge-bg); color: var(--badge-text); padding: 0.2rem 0.45rem; border-radius: 4px; font-weight: 600; font-size: 0.88rem; }
-    .price { font-weight: 600; color: #047857; }
-    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
-    footer { background: #0f172a; color: #cbd5e1; text-align: center; padding: 1.25rem 1rem; font-size: 0.9rem; margin-top: auto; border-top: 1px solid #334155; }
-    footer strong { color: #f8fafc; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f8fafc;
+      color: var(--slate-800);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Navigation Bar */
+    .navbar {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      color: #fff;
+      padding: 0.85rem 1.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+    }
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+      line-height: 1.2;
+    }
+    .brand-subtitle {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .cloud-status {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    .user-chip {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 9999px;
+      padding: 0.3rem 0.8rem 0.3rem 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .user-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #4f46e5;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .user-text {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1160px;
+      width: 100%;
+      margin: 1.75rem auto;
+      padding: 0 1.25rem;
+      flex: 1;
+    }
+
+    /* Flash Alerts */
+    .alert {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.9rem 1.25rem;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      font-size: 0.92rem;
+      font-weight: 500;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      animation: slideDown 0.3s ease-out;
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .alert-success {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+    .alert-error {
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    /* KPI Summary Cards Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+    .kpi-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 1.25rem;
+      border: 1px solid var(--slate-200);
+      box-shadow: var(--card-shadow);
+      transition: all 0.2s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--card-shadow-hover);
+      border-color: #cbd5e1;
+    }
+    .kpi-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--slate-500);
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+    .kpi-value {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--slate-900);
+      letter-spacing: -0.02em;
+    }
+    .kpi-sub {
+      font-size: 0.75rem;
+      color: var(--slate-400);
+      margin-top: 0.25rem;
+      font-weight: 500;
+    }
+    .kpi-icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .icon-indigo { background: #eef2ff; color: #4f46e5; }
+    .icon-emerald { background: #ecfdf5; color: #10b981; }
+    .icon-amber { background: #fffbeb; color: #f59e0b; }
+    .icon-purple { background: #faf5ff; color: #a855f7; }
+
+    /* Action & Search Bar */
+    .table-card {
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid var(--slate-200);
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+    }
+    .table-toolbar {
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      border-bottom: 1px solid var(--slate-200);
+      background: #fff;
+    }
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex: 1;
+      min-width: 260px;
+    }
+    .search-box {
+      position: relative;
+      width: 100%;
+      max-width: 380px;
+    }
+    .search-box svg {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--slate-400);
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.65rem 0.85rem 0.65rem 2.4rem;
+      border-radius: 10px;
+      border: 1px solid var(--slate-200);
+      background: var(--slate-50);
+      font-size: 0.88rem;
+      font-family: inherit;
+      color: var(--slate-800);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+    .search-input:focus {
+      background: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+      color: #fff;
+      text-decoration: none;
+      padding: 0.65rem 1.25rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #4f46e5 100%);
+      box-shadow: 0 6px 14px rgba(79, 70, 229, 0.35);
+      transform: translateY(-1px);
+    }
+
+    /* Table Styling */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      text-align: left;
+    }
+    thead th {
+      background: var(--slate-50);
+      color: var(--slate-500);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 700;
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1px solid var(--slate-200);
+      white-space: nowrap;
+    }
+    tbody tr {
+      transition: background-color 0.15s ease;
+    }
+    tbody tr:hover {
+      background-color: #f8fafc;
+    }
+    tbody td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--slate-100);
+      font-size: 0.9rem;
+      vertical-align: middle;
+    }
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .code-badge {
+      display: inline-flex;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 0.82rem;
+      padding: 0.25rem 0.55rem;
+      background: #eef2ff;
+      color: #4338ca;
+      border-radius: 6px;
+      border: 1px solid #c7d2fe;
+    }
+    .book-title {
+      font-weight: 600;
+      color: var(--slate-900);
+      font-size: 0.94rem;
+    }
+    .book-author {
+      color: var(--slate-500);
+      font-size: 0.84rem;
+    }
+    .price-tag {
+      font-weight: 600;
+      color: var(--slate-700);
+    }
+    .vat-pill {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #6366f1;
+      background: #e0e7ff;
+      padding: 0.2rem 0.5rem;
+      border-radius: 9999px;
+    }
+    .price-final {
+      font-weight: 700;
+      color: var(--emerald);
+      font-size: 0.96rem;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 4rem 1.5rem;
+    }
+    .empty-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1rem;
+      color: var(--slate-400);
+      background: var(--slate-100);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Footer */
+    footer {
+      background: #0f172a;
+      color: #94a3b8;
+      border-top: 1px solid #1e293b;
+      padding: 1.5rem 1.25rem;
+      margin-top: auto;
+    }
+    .footer-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .footer-exam-info {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+    .footer-exam-info strong {
+      color: #fff;
+    }
+    .footer-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .footer-tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      background: #1e293b;
+      color: #94a3b8;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid #334155;
+    }
   </style>
 </head>
 <body>
-  <header class="header-bar">
-    <div class="header-title">Hệ Thống Quản Lý Sách (Cloud Computing)</div>
-    <div class="header-badges">
-      <span class="badge">DB_{{mssv}}</span>
-      <span class="badge">VAT: {{vatRate}}%</span>
-    </div>
-  </header>
 
+  <!-- Top Navigation Bar -->
+  <nav class="navbar">
+    <div class="brand-group">
+      <div class="brand-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-title">CloudBooks Manager</div>
+        <div class="brand-subtitle">Hạ tầng phân tán • Stateless Architecture</div>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <div class="cloud-status">
+        <span class="pulse-dot"></span>
+        <span>Atlas Cluster Online</span>
+      </div>
+      <div class="user-chip">
+        <div class="user-avatar">LH</div>
+        <span class="user-text">{{fullName}} ({{mssv}})</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Container -->
   <main class="container">
     {{#if flashMessage}}
-      <div class="alert alert-success">{{flashMessage}}</div>
+      <div class="alert alert-success">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        <span>{{flashMessage}}</span>
+      </div>
     {{/if}}
 
     {{#if error}}
-      <div class="alert alert-error">{{error}}</div>
+      <div class="alert alert-error">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span>{{error}}</span>
+      </div>
     {{/if}}
 
-    <div class="card">
-      <div class="card-header">
+    <!-- KPI Metric Cards Grid -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
         <div>
-          <h2 style="font-size: 1.4rem;">Danh Sách Sách Trên Đám Mây</h2>
-          <div class="session-info">
-            Cloud Stateless Session: Phiên kết nối MongoDB Atlas | Lượt truy cập phiên: <strong>{{sessionViews}}</strong>
-          </div>
+          <div class="kpi-title">Tổng số lượng sách</div>
+          <div class="kpi-value">{{totalBooks}}</div>
+          <div class="kpi-sub">Lưu trữ trên MongoDB Atlas</div>
         </div>
-        <a href="/books/add" class="btn">+ Thêm Sách Mới</a>
+        <div class="kpi-icon-wrap icon-indigo">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+        </div>
       </div>
 
-      {{#if books.length}}
-      <div style="overflow-x: auto;">
-        <table>
+      <div class="kpi-card">
+        <div>
+          <div class="kpi-title">Mức thuế VAT động</div>
+          <div class="kpi-value">{{vatRate}}%</div>
+          <div class="kpi-sub">Công thức: ({{mssv}} đuôi 2 + 5)%</div>
+        </div>
+        <div class="kpi-icon-wrap icon-amber">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div>
+          <div class="kpi-title">Tổng giá trị sau thuế</div>
+          <div class="kpi-value" style="font-size: 1.35rem; color: var(--emerald);">{{totalInventoryValue}}</div>
+          <div class="kpi-sub">Đã gồm {{vatRate}}% thuế VAT</div>
+        </div>
+        <div class="kpi-icon-wrap icon-emerald">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div>
+          <div class="kpi-title">Stateless Session</div>
+          <div class="kpi-value">{{sessionViews}} <span style="font-size: 0.85rem; font-weight: 500; color: var(--slate-500);">views</span></div>
+          <div class="kpi-sub">Lưu trữ tập trung trên Cloud</div>
+        </div>
+        <div class="kpi-icon-wrap icon-purple">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Container Card -->
+    <div class="table-card">
+      <div class="table-toolbar">
+        <div class="toolbar-left">
+          <div class="search-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="tableSearch" class="search-input" placeholder="Tìm theo mã SP, tên sách, tác giả...">
+          </div>
+        </div>
+        <a href="/books/add" class="btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Thêm Sách Mới
+        </a>
+      </div>
+
+      <div class="table-container">
+        {{#if books.length}}
+        <table id="booksTable">
           <thead>
             <tr>
               <th>Mã sản phẩm</th>
               <th>Tên sách</th>
               <th>Tác giả</th>
-              <th>Giá gốc</th>
+              <th>Giá trước thuế</th>
               <th>Thuế VAT</th>
               <th>Giá sau thuế</th>
             </tr>
@@ -92,28 +561,59 @@
           <tbody>
             {{#each books}}
             <tr>
-              <td><span class="code-tag">{{productCode}}</span></td>
-              <td style="font-weight: 600;">{{title}}</td>
-              <td style="color: var(--text-muted);">{{author}}</td>
-              <td>{{priceBeforeTax}} đ</td>
-              <td><span style="color: #6366f1; font-weight: 600;">{{vatRate}}%</span></td>
-              <td><span class="price">{{priceAfterTax}} đ</span></td>
+              <td><span class="code-badge">{{productCode}}</span></td>
+              <td><div class="book-title">{{title}}</div></td>
+              <td><div class="book-author">{{author}}</div></td>
+              <td><span class="price-tag">{{formattedPriceBefore}}</span></td>
+              <td><span class="vat-pill">{{vatRate}}%</span></td>
+              <td><span class="price-final">{{formattedPriceAfter}}</span></td>
             </tr>
             {{/each}}
           </tbody>
         </table>
+        {{else}}
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          </div>
+          <h3 style="font-size: 1.1rem; color: var(--slate-800); margin-bottom: 0.35rem;">Chưa có cuốn sách nào</h3>
+          <p style="font-size: 0.88rem; color: var(--slate-500); margin-bottom: 1.25rem;">Cơ sở dữ liệu đang trống. Hãy thêm sản phẩm đầu tiên vào đám mây.</p>
+          <a href="/books/add" class="btn-primary">Thêm Sách Mới Ngay</a>
+        </div>
+        {{/if}}
       </div>
-      {{else}}
-      <div class="empty-state">
-        <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">Chưa có cuốn sách nào trong cơ sở dữ liệu.</p>
-        <p style="font-size: 0.88rem;">Nhấn nút "Thêm Sách Mới" ở trên để thêm sản phẩm đầu tiên.</p>
-      </div>
-      {{/if}}
     </div>
   </main>
 
+  <!-- Required Exam Footer -->
   <footer>
-    Họ tên: <strong>{{fullName}}</strong> | MSSV: <strong>{{mssv}}</strong> | Lớp: <strong>{{className}}</strong> | Mức VAT áp dụng: <strong>{{vatRate}}%</strong>
+    <div class="footer-inner">
+      <div class="footer-exam-info">
+        Họ tên: <strong>{{fullName}}</strong> | MSSV: <strong>{{mssv}}</strong> | Lớp: <strong>{{className}}</strong> | Mức VAT áp dụng: <strong>{{vatRate}}%</strong>
+      </div>
+      <div class="footer-tags">
+        <span class="footer-tag">DB: DB_{{mssv}}</span>
+        <span class="footer-tag">Node.js • Express</span>
+        <span class="footer-tag">Stateless Session</span>
+        <span class="footer-tag">MongoDB Atlas</span>
+      </div>
+    </div>
   </footer>
+
+  <script>
+    // Live table search
+    const searchInput = document.getElementById('tableSearch');
+    const table = document.getElementById('booksTable');
+    if (searchInput && table) {
+      searchInput.addEventListener('input', function() {
+        const query = this.value.toLowerCase().trim();
+        const rows = table.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          row.style.display = text.includes(query) ? '' : 'none';
+        });
+      });
+    }
+  </script>
 </body>
 </html>
