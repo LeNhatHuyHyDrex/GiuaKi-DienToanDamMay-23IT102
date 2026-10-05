@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="vi">
+<head><meta charset="utf-8"><title>Quản lý sách</title></head>
+<body>
+  <main>
+    <h1>Quản lý sách</h1>
+    <a href="/books/add">+ Thêm sách</a>
+    {{#if error}}<p style="color:red">{{error}}</p>{{/if}}
+    {{#if books.length}}
+    <table border="1" cellpadding="8">
+      <thead><tr><th>Mã sản phẩm</th><th>Tên sách</th><th>Tác giả</th><th>Giá trước thuế</th><th>VAT</th><th>Giá sau thuế</th></tr></thead>
+      <tbody>{{#each books}}<tr><td>{{productCode}}</td><td>{{title}}</td><td>{{author}}</td><td>{{priceBeforeTax}}</td><td>{{vatRate}}%</td><td>{{priceAfterTax}}</td></tr>{{/each}}</tbody>
+    </table>
+    {{else}}<p>Chưa có sách nào.</p>{{/if}}
+  </main>
+  <footer>Họ tên: {{fullName}} | MSSV: {{mssv}} | Lớp: {{className}} | VAT áp dụng: {{vatRate}}%</footer>
+</body>
+</html>
