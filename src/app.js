@@ -12,7 +12,7 @@ if (missing.length) console.warn(`Missing environment variables: ${missing.join(
 
 const app = express();
 app.set('trust proxy', 1);
-app.engine('hbs', engine({ extname: '.hbs' }));
+app.engine('hbs', engine({ extname: '.hbs', defaultLayout: false }));
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
