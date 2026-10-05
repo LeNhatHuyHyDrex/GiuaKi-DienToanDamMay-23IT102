@@ -12,7 +12,6 @@
       --primary: #4f46e5;
       --primary-hover: #4338ca;
       --emerald: #059669;
-      --emerald-light: #ecfdf5;
       --slate-50: #f8fafc;
       --slate-100: #f1f5f9;
       --slate-200: #e2e8f0;
@@ -84,9 +83,9 @@
 
     /* Form Container */
     .container {
-      max-width: 680px;
+      max-width: 600px;
       width: 100%;
-      margin: 2.25rem auto;
+      margin: 2.5rem auto;
       padding: 0 1.25rem;
       flex: 1;
     }
@@ -130,71 +129,16 @@
       gap: 0.6rem;
     }
 
-    /* Info Badge Box */
-    .rule-box {
-      background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
-      border: 1px solid #a7f3d0;
-      border-radius: 14px;
-      padding: 1.1rem 1.25rem;
-      margin-bottom: 1.75rem;
-      display: flex;
-      gap: 0.85rem;
-      align-items: flex-start;
-    }
-    .rule-box-icon {
-      color: #059669;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-    .rule-title {
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: #065f46;
-      margin-bottom: 0.25rem;
-    }
-    .rule-desc {
-      font-size: 0.82rem;
-      color: #047857;
-      line-height: 1.5;
-    }
-
     /* Form Fields */
     .form-group {
       margin-bottom: 1.35rem;
     }
-    .label-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.45rem;
-    }
     label {
+      display: block;
       font-size: 0.88rem;
       font-weight: 700;
       color: var(--slate-700);
-    }
-    .status-pill {
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 0.15rem 0.5rem;
-      border-radius: 9999px;
-      display: none;
-    }
-    .pill-valid {
-      display: inline-block;
-      background: #ecfdf5;
-      color: #059669;
-      border: 1px solid #a7f3d0;
-    }
-    .pill-invalid {
-      display: inline-block;
-      background: #fef2f2;
-      color: #dc2626;
-      border: 1px solid #fecaca;
-    }
-
-    .input-wrapper {
-      position: relative;
+      margin-bottom: 0.45rem;
     }
     input {
       width: 100%;
@@ -216,11 +160,6 @@
       font-family: 'JetBrains Mono', monospace;
       font-weight: 600;
       letter-spacing: 0.05em;
-    }
-    .input-hint {
-      font-size: 0.78rem;
-      color: var(--slate-400);
-      margin-top: 0.35rem;
     }
 
     /* Dynamic VAT Calculation Card */
@@ -312,7 +251,7 @@
       margin-top: auto;
     }
     .footer-inner {
-      max-width: 680px;
+      max-width: 600px;
       margin: 0 auto;
       text-align: center;
       font-size: 0.88rem;
@@ -348,8 +287,8 @@
   <main class="container">
     <div class="form-card">
       <div class="form-header">
-        <h1 class="form-title">Thêm Sách Mới Lên Cloud</h1>
-        <p class="form-desc">Dữ liệu sẽ được ghi trực tiếp vào cơ sở dữ liệu phân tán MongoDB Atlas.</p>
+        <h1 class="form-title">Thêm Sách Mới</h1>
+        <p class="form-desc">Nhập thông tin sản phẩm sách để lưu trữ lên cơ sở dữ liệu đám mây.</p>
       </div>
 
       {{#if error}}
@@ -359,38 +298,20 @@
         </div>
       {{/if}}
 
-      <!-- Exam Rules Box -->
-      <div class="rule-box">
-        <div class="rule-box-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-        </div>
-        <div>
-          <div class="rule-title">Quy tắc cá nhân hóa theo MSSV {{mssv}}:</div>
-          <div class="rule-desc">
-            • <strong>Mã sản phẩm</strong>: Bắt buộc bắt đầu bằng 3 chữ số cuối MSSV (<strong>102</strong>).<br>
-            • <strong>Thuế VAT</strong>: Tự động tính <strong>{{vatRate}}%</strong> (Chữ số cuối MSSV + 5%).
-          </div>
-        </div>
-      </div>
-
       <form method="post" action="/books" id="addBookForm">
         <div class="form-group">
-          <div class="label-row">
-            <label for="productCode">Mã sản phẩm *</label>
-            <span id="prefixStatus" class="status-pill"></span>
-          </div>
-          <input id="productCode" name="productCode" class="code-input" placeholder="Ví dụ: 102004" required value="{{oldData.productCode}}">
-          <div class="input-hint">Phải có tiền tố <strong>102</strong> (3 số cuối MSSV của bạn).</div>
+          <label for="productCode">Mã sản phẩm *</label>
+          <input id="productCode" name="productCode" class="code-input" placeholder="Ví dụ: 102001" required value="{{oldData.productCode}}">
         </div>
 
         <div class="form-group">
           <label for="title">Tên sách *</label>
-          <input id="title" name="title" placeholder="Ví dụ: Thiết kế Hạ tầng Điện toán Đám mây" required value="{{oldData.title}}">
+          <input id="title" name="title" placeholder="Nhập tên sách..." required value="{{oldData.title}}">
         </div>
 
         <div class="form-group">
           <label for="author">Tác giả *</label>
-          <input id="author" name="author" placeholder="Ví dụ: Lê Nhật Huy" required value="{{oldData.author}}">
+          <input id="author" name="author" placeholder="Nhập tên tác giả..." required value="{{oldData.author}}">
         </div>
 
         <div class="form-group">
@@ -413,7 +334,7 @@
             <span id="calcVat" style="font-weight: 600; color: #6366f1;">0 ₫</span>
           </div>
           <div class="calc-row final">
-            <span>Giá sau thuế (Lưu vào Cloud):</span>
+            <span>Giá sau thuế (Tự động tính):</span>
             <span id="calcTotal">0 ₫</span>
           </div>
         </div>
@@ -421,7 +342,7 @@
         <div class="button-group">
           <button type="submit" class="btn-submit">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-            Lưu Sách Lên Cloud
+            Lưu Sách
           </button>
           <a href="/books" class="btn-cancel">Hủy bỏ</a>
         </div>
@@ -438,30 +359,6 @@
 
   <script>
     const vatRate = Number('{{vatRate}}') || 7;
-    const prefix = '102';
-
-    // Live Product Code prefix check
-    const codeInput = document.getElementById('productCode');
-    const prefixStatus = document.getElementById('prefixStatus');
-
-    function checkPrefix() {
-      const val = codeInput.value.trim();
-      if (!val) {
-        prefixStatus.style.display = 'none';
-        return;
-      }
-      if (val.startsWith(prefix)) {
-        prefixStatus.textContent = '✓ Tiền tố 102 hợp lệ';
-        prefixStatus.className = 'status-pill pill-valid';
-      } else {
-        prefixStatus.textContent = '✕ Bắt buộc bắt đầu bằng 102';
-        prefixStatus.className = 'status-pill pill-invalid';
-      }
-    }
-    codeInput.addEventListener('input', checkPrefix);
-    checkPrefix();
-
-    // Live VAT Calculation
     const priceInput = document.getElementById('priceBeforeTax');
     const calcBase = document.getElementById('calcBase');
     const calcVat = document.getElementById('calcVat');
